@@ -13,6 +13,17 @@ class TestVarasto(unittest.TestCase):
     def test_uudella_varastolla_oikea_tilavuus(self):
         self.assertAlmostEqual(self.varasto.tilavuus, 10)
 
+    def test_konstruktori_nollaa_negatiivisen_tilavuuden_ja_saldon(self):
+        varasto = Varasto(-5, -1)
+
+        self.assertAlmostEqual(varasto.tilavuus, 0)
+        self.assertAlmostEqual(varasto.saldo, 0)
+
+    def test_konstruktori_rajoittaa_yli_tilavuuden_menevan_saldon(self):
+        varasto = Varasto(10, 11)
+
+        self.assertAlmostEqual(varasto.saldo, 10)
+
     def test_lisays_lisaa_saldoa(self):
         self.varasto.lisaa_varastoon(8)
 
@@ -23,6 +34,16 @@ class TestVarasto(unittest.TestCase):
 
         # vapaata tilaa pitäisi vielä olla tilavuus-lisättävä määrä eli 2
         self.assertAlmostEqual(self.varasto.paljonko_mahtuu(), 2)
+
+    def test_negatiivista_maaraa_ei_lisata(self):
+        self.varasto.lisaa_varastoon(-1)
+
+        self.assertAlmostEqual(self.varasto.saldo, 0)
+
+    def test_tilavuuden_yli_meneva_lisays_tayttaa_varaston(self):
+        self.varasto.lisaa_varastoon(11)
+
+        self.assertAlmostEqual(self.varasto.saldo, 10)
 
     def test_ottaminen_palauttaa_oikean_maaran(self):
         self.varasto.lisaa_varastoon(8)
@@ -38,3 +59,22 @@ class TestVarasto(unittest.TestCase):
 
         # varastossa pitäisi olla tilaa 10 - 8 + 2 eli 4
         self.assertAlmostEqual(self.varasto.paljonko_mahtuu(), 4)
+
+    def test_negatiivisen_maaran_ottaminen_palauttaa_nollan(self):
+        saatu_maara = self.varasto.ota_varastosta(-1)
+
+        self.assertAlmostEqual(saatu_maara, 0)
+        self.assertAlmostEqual(self.varasto.saldo, 0)
+
+    def test_saldoa_suurempi_otto_palauttaa_koko_saldon(self):
+        self.varasto.lisaa_varastoon(8)
+
+        saatu_maara = self.varasto.ota_varastosta(10)
+
+        self.assertAlmostEqual(saatu_maara, 8)
+        self.assertAlmostEqual(self.varasto.saldo, 0)
+
+    def test_merkkijono_esittaa_saldon_ja_vapaan_tilan(self):
+        self.assertEqual(str(self.varasto), "saldo = 0, vielä tilaa 10")
+
+   
