@@ -53,6 +53,5 @@ def main():
     print(f"saatiin {saatiin}")
     print(f"Mehuvarasto: {mehua}")
 
-this_is_a_very_long_variable_name_that_exceeds_the_maximum_allowed_line_length = 123
 if __name__ == "__main__":
     main()
